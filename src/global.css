@@ -66,3 +66,9 @@
 .col-12 {
   width: 100%;
 }
+
+.center {
+  display: grid;
+  place-items: center;
+  height: 100vh;
+}

@@ -23,7 +23,7 @@ export default function Home() {
     getAllCharacters();
   }, []);
 
-  if (isLoading) return <div className="center-loading">loading...</div>;
+  if (isLoading) return <p className="center">loading...</p>;
   else
     return (
       <div className="container">
@@ -31,7 +31,7 @@ export default function Home() {
           <article
             className="card col-3"
             key={character.char_id}
-            onClick={() => navigate(`/quotes/${character.char_id}`)}
+            onClick={() => navigate(`/quotes/${character.name}`)}
           >
             <section className="card-content col-12">
               <section className="col-6">

@@ -8,7 +8,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/quotes/:characterId" element={<Quotes />} />
+        <Route path="/quotes/:name" element={<Quotes />} />
         <Route
           path="*"
           element={
