@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import service from "../../services/service";
 import "./style.css";
 
 export default function Home() {
+  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
   const [characters, setCharacters] = useState([]);
 
@@ -21,24 +23,16 @@ export default function Home() {
     getAllCharacters();
   }, []);
 
-  if (isLoading)
-    return (
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "95vh",
-        }}
-      >
-        loading...
-      </div>
-    );
+  if (isLoading) return <div className="center-loading">loading...</div>;
   else
     return (
       <div className="container">
         {characters.map((character) => (
-          <section className="card col-3" key={character.char_id}>
+          <article
+            className="card col-3"
+            key={character.char_id}
+            onClick={() => navigate(`/quotes/${character.char_id}`)}
+          >
             <section className="card-content col-12">
               <section className="col-6">
                 <img
@@ -49,13 +43,21 @@ export default function Home() {
                 />
               </section>
               <section className="col-6 info">
-                <section>name: {character.name}</section>
-                <section>nickname: {character.nickname}</section>
-                <section>birthday: {character.birthday}</section>
-                <section>status: {character.status}</section>
+                <section>
+                  <p>name: {character.name}</p>
+                </section>
+                <section>
+                  <p>nickname: {character.nickname}</p>
+                </section>
+                <section>
+                  <p>birthday: {character.birthday}</p>
+                </section>
+                <section>
+                  <p>status: {character.status}</p>
+                </section>
               </section>
             </section>
-          </section>
+          </article>
         ))}
       </div>
     );
