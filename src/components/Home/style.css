@@ -72,8 +72,8 @@
   align-items: center;
 }
 
-@media (max-width: 720px) {
-  .card {
+@media (max-width: 576px) {
+  .card-content {
     flex-direction: column;
     width: 100%;
   }

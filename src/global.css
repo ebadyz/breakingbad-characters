@@ -57,3 +57,24 @@
   place-items: center;
   height: 100vh;
 }
+
+@media (max-width: 576px) {
+  .col-xs-6 {
+    width: 50%;
+  }
+  .col-xs-12 {
+    width: 100%;
+  }
+}
+
+@media (min-width: 576px) and (max-width: 720px) {
+  .col-sm-3 {
+    width: 25%;
+  }
+  .col-sm-6 {
+    width: 50%;
+  }
+  .col-sm-12 {
+    width: 100%;
+  }
+}
