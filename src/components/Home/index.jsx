@@ -16,7 +16,7 @@ function sortByOrder(a, b, prop, order) {
   }
 }
 
-function sortAndFilter(array, sorts, filters) {
+function sortAndFilter(array, sorts, filterKey) {
   // TODO: expensive clone
   let out = array.slice();
 
@@ -27,15 +27,14 @@ function sortAndFilter(array, sorts, filters) {
     }
   });
 
-  // Apply filters
-  Object.keys(filters).forEach((key) => {
-    if (filters[key] != null) {
-      out = out.filter(
-        (item) =>
-          item[key].toLowerCase().indexOf(filters[key].toLowerCase()) > -1
-      );
-    }
-  });
+  // Filter by name or nickname
+  if (filterKey) {
+    out = out.filter(
+      (item) =>
+        item.name.toLowerCase().indexOf(filterKey.toLowerCase()) > -1 ||
+        item.nickname.toLowerCase().indexOf(filterKey.toLowerCase()) > -1
+    );
+  }
 
   return out;
 }
@@ -45,6 +44,7 @@ export default function Home() {
   const initialState = {
     isLoading: true,
     characters: [],
+    originalCharacters: [],
     // TODO: initialize from local storage
     // Sort state = ASC | DESC | null = null
     sorts: {
@@ -52,12 +52,10 @@ export default function Home() {
       nickname: "",
       birthday: "",
     },
-    filters: {
-      // TODO: loop here
-      name: null,
-    },
+    filterByNameKey: "",
   };
   const reducer = (state, action) => {
+    console.log(action);
     switch (action.type) {
       case "TOGGLE_LOADING": {
         return { ...state, isLoading: action.isLoading };
@@ -66,17 +64,18 @@ export default function Home() {
         return {
           ...state,
           characters: action.characters,
+          originalCharacters: action.characters,
         };
       }
-      case "FILTER": {
-        const newFilters = {
-          ...state.filters,
-          [action.by]: action.value || null,
-        };
+      case "FILTER_BY_NAME_NICKNAME": {
         return {
           ...state,
-          filters: newFilters,
-          characters: sortAndFilter(state.characters, state.sorts, newFilters),
+          filterByNameKey: action.value,
+          characters: sortAndFilter(
+            state.originalCharacters,
+            state.sorts,
+            action.value
+          ),
         };
       }
       case "SORT": {
@@ -91,7 +90,11 @@ export default function Home() {
         return {
           ...state,
           sorts: newSorts,
-          characters: sortAndFilter(state.characters, newSorts, state.filters),
+          characters: sortAndFilter(
+            state.originalCharacters,
+            newSorts,
+            state.filters
+          ),
         };
       }
       default:
@@ -100,22 +103,21 @@ export default function Home() {
   };
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  const getAllCharacters = async () => {
-    try {
-      const res = await service.get("characters");
-      dispatch({ type: "CHARACTERS", characters: res });
-    } catch (error) {
-      console.warn(error);
-    } finally {
-      dispatch({ type: "TOGGLE_LOADING", isLoading: false });
-    }
-  };
-
   useEffect(() => {
-    getAllCharacters();
+    service
+      .get("characters")
+      .then((res) => {
+        dispatch({ type: "CHARACTERS", characters: res });
+      })
+      .catch((err) => {
+        console.warn(err);
+      })
+      .finally(() => {
+        dispatch({ type: "TOGGLE_LOADING", isLoading: false });
+      });
   }, []);
 
-  console.log(state.characters);
+  console.log(state);
 
   if (state.isLoading) return <p className="center">loading...</p>;
   else
@@ -130,11 +132,10 @@ export default function Home() {
               id="filter"
               name="name"
               placeholder="Name or Nickname"
-              defaultValue={state.filters.name}
+              defaultValue={state.filterByNameKey}
               onChange={(e) =>
                 dispatch({
-                  type: "FILTER",
-                  by: "name",
+                  type: "FILTER_BY_NAME_NICKNAME",
                   value: e.target.value,
                 })
               }
@@ -145,10 +146,10 @@ export default function Home() {
             <select
               id="sort"
               className="field"
-              // defaultValue={state.sorts}
+              defaultValue={0}
               onChange={(order) => dispatch({ type: "SORT", by: order, order })}
             >
-              <option value="0" disabled selected>
+              <option value="0" disabled>
                 choose...
               </option>
               <option value="name">name</option>
