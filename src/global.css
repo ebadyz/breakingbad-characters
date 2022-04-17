@@ -58,6 +58,18 @@
   height: 100vh;
 }
 
+.btn {
+  border: none;
+  outline: none;
+  padding: 0.8rem;
+  cursor: pointer;
+}
+
+.btn:disabled {
+  background-color: var(--light-gray);
+  color: var(--dark);
+}
+
 @media (max-width: 576px) {
   .col-xs-6 {
     width: 50%;

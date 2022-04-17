@@ -134,7 +134,7 @@ export default function Home() {
     return (
       <>
         <FiltersCard state={state} dispatch={dispatch} />
-        <div className="container">
+        <main className="container">
           {state.characters.map((character) => (
             <article
               className="card col-xs-12 col-sm-6 col-3"
@@ -167,7 +167,7 @@ export default function Home() {
               </section>
             </article>
           ))}
-        </div>
+        </main>
       </>
     );
 }

@@ -9,7 +9,11 @@ export default function QuoteBox({ isWaiting, quote, randomQuoteHandler }) {
       ) : (
         <h4 className="vertical-spacing">{quote}</h4>
       )}
-      <button disabled={isWaiting} onClick={randomQuoteHandler} className="btn">
+      <button
+        disabled={isWaiting}
+        onClick={randomQuoteHandler}
+        className="btn quote-btn"
+      >
         Random quote
       </button>
     </section>

@@ -2,9 +2,9 @@ import "./style.css";
 
 export default function FiltersCard({ state, dispatch }) {
   return (
-    <div className="form-card">
+    <header className="form-card">
       <div className="input-wrapper col-xs-12 col-3">
-        <label htmlFor="filter">Filter:</label>
+        <label htmlFor="filter">Filter</label>
         <input
           className="field"
           type="text"
@@ -40,7 +40,7 @@ export default function FiltersCard({ state, dispatch }) {
       </div>
       <div className="col-xs-12 col-3">
         <button
-          className="sort-btn col-12"
+          className="btn sort-btn col-12"
           onClick={() => {
             dispatch({ type: "TOGGLE_SORT_ORDER" });
           }}
@@ -48,6 +48,6 @@ export default function FiltersCard({ state, dispatch }) {
           {state.sortOrder}
         </button>
       </div>
-    </div>
+    </header>
   );
 }

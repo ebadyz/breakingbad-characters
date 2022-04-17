@@ -3,8 +3,11 @@
   align-items: flex-end;
   justify-content: space-between;
   flex-flow: row wrap;
-  padding: 0 2rem;
+  padding: 2rem;
+  border-radius: 0.5rem;
+  margin: 1rem 2rem;
   gap: 20px;
+  background-color: var(--light-gray);
 }
 
 .input-wrapper {
@@ -25,9 +28,7 @@
 .sort-btn {
   background-color: var(--dark);
   color: var(--light);
-  border: 1px solid var(--dark);
-  outline: none;
-  padding: 0.8rem;
+  padding: 1rem;
   border-radius: 0.3rem;
   cursor: pointer;
 }

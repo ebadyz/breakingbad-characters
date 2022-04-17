@@ -10,18 +10,9 @@
   padding: 1rem 0;
 }
 
-.btn {
-  width: 120px;
-  border: none;
-  outline: none;
-  padding: 0.8rem;
-  border-radius: 2rem;
+.quote-btn {
   background-color: var(--dark);
   color: var(--light);
-  cursor: pointer;
-}
-
-.btn:disabled {
-  background-color: var(--light-gray);
-  color: var(--dark);
+  border-radius: 0.5rem;
+  width: 120px;
 }
