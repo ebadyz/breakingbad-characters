@@ -16,16 +16,26 @@ function sortByOrder(a, b, prop, order) {
   }
 }
 
-function sortAndFilter(array, sorts, filterKey) {
+function toggleSortOrder(currentOrder) {
+  switch (currentOrder) {
+    case "ASC": {
+      return "DESC";
+    }
+    case "DESC": {
+      return "ASC";
+    }
+    default: {
+      return null;
+    }
+  }
+}
+
+function sortAndFilter(array, sortKey, sortOrder, filterKey) {
   // TODO: expensive clone
   let out = array.slice();
 
-  // Apply sorts
-  Object.keys(sorts).forEach((key) => {
-    if (sorts[key] != null) {
-      out = out.sort((a, b) => sortByOrder(a, b, key, sorts[key]));
-    }
-  });
+  // Apply sort
+  out = out.sort((a, b) => sortByOrder(a, b, sortKey, sortOrder));
 
   // Filter by name or nickname
   if (filterKey) {
@@ -45,17 +55,11 @@ export default function Home() {
     isLoading: true,
     characters: [],
     originalCharacters: [],
-    // TODO: initialize from local storage
-    // Sort state = ASC | DESC | null = null
-    sorts: {
-      name: "",
-      nickname: "",
-      birthday: "",
-    },
+    sortKey: null,
+    sortOrder: "DESC",
     filterByNameKey: "",
   };
   const reducer = (state, action) => {
-    console.log(action);
     switch (action.type) {
       case "TOGGLE_LOADING": {
         return { ...state, isLoading: action.isLoading };
@@ -73,27 +77,34 @@ export default function Home() {
           filterByNameKey: action.value,
           characters: sortAndFilter(
             state.originalCharacters,
-            state.sorts,
+            state.sortOrder,
+            state.sortKey,
             action.value
           ),
         };
       }
-      case "SORT": {
-        const newSorts = {
-          ...state.sorts,
-          // Cancel a sort order on sending the same order twice in a row
-          [action.by]:
-            state.sorts[action.by] === action.order
-              ? null
-              : action.order || null,
-        };
+      case "SORT_KEY": {
         return {
           ...state,
-          sorts: newSorts,
+          sortKey: action.value,
           characters: sortAndFilter(
             state.originalCharacters,
-            newSorts,
-            state.filters
+            action.value,
+            state.sortOrder,
+            state.filterByNameKey
+          ),
+        };
+      }
+      case "TOGGLE_SORT_ORDER": {
+        const sortOrder = toggleSortOrder(state.sortOrder);
+        return {
+          ...state,
+          sortOrder,
+          characters: sortAndFilter(
+            state.originalCharacters,
+            state.sortKey,
+            sortOrder,
+            state.filterByNameKey
           ),
         };
       }
@@ -147,7 +158,9 @@ export default function Home() {
               id="sort"
               className="field"
               defaultValue={0}
-              onChange={(order) => dispatch({ type: "SORT", by: order, order })}
+              onChange={(e) =>
+                dispatch({ type: "SORT_KEY", value: e.target.value })
+              }
             >
               <option value="0" disabled>
                 choose...
@@ -158,7 +171,14 @@ export default function Home() {
             </select>
           </div>
           <div className="col-3">
-            <button className="sort-btn col-12">desc/asc</button>
+            <button
+              className="sort-btn col-12"
+              onClick={() => {
+                dispatch({ type: "TOGGLE_SORT_ORDER" });
+              }}
+            >
+              {state.sortOrder}
+            </button>
           </div>
         </div>
         <div className="container">
