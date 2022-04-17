@@ -1,8 +1,5 @@
-.quote-card {
+.box {
   display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
   min-height: 200px;
   color: var(--dark);
   border: 1px solid var(--secondary);
@@ -11,23 +8,24 @@
   width: 35%;
 }
 
-.vertical-spacing {
-  padding: 1rem 0;
-}
-
-.btn {
-  width: 120px;
-  border: none;
-  outline: none;
-  padding: 0.8rem;
-  border-radius: 2rem;
-  background-color: var(--dark);
-  color: var(--light);
-  cursor: pointer;
+.message {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+  color: var(--danger);
+  background-color: var(--white);
+  border: 1px solid var(--secondary);
+  border-radius: 0.5rem;
+  padding: 1rem;
+  width: 35%;
 }
 
 @media (max-width: 720px) {
-  .quote-card {
+  .box {
+    width: 90%;
+  }
+  .message {
     width: 90%;
   }
 }

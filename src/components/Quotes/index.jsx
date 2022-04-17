@@ -2,23 +2,24 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import service from "../../services/service";
 import "./style.css";
+import QuoteBox from "../QuoteBox";
 
 export default function Quotes() {
   const { name } = useParams();
   const [isLoading, setIsLoading] = useState(true);
-  const [isWaiting, setWaiting] = useState(false);
-  const [quote, setQuote] = useState({});
+  const [quote, setQuote] = useState([]);
+  const [isWaiting, setIsWaiting] = useState(false);
 
   const getRandomQuote = async () => {
-    setWaiting(true);
     try {
-      const res = await service.get(`quote/random?author=${name}`);
-      setQuote(res[0]);
+      setIsWaiting(true);
+      const res = await service.get(`quote/random?autho%20r=${name}`);
+      setQuote(res);
     } catch (error) {
       console.warn(error);
     } finally {
       setIsLoading(false);
-      setWaiting(false);
+      setIsWaiting(false);
     }
   };
 
@@ -30,17 +31,22 @@ export default function Quotes() {
   else
     return (
       <section className="center">
-        <section className="quote-card">
-          <h1>Quote:</h1>
-          {isWaiting ? (
-            <p className="vertical-spacing">loading...</p>
-          ) : (
-            <h4 className="vertical-spacing">{quote.quote}</h4>
-          )}
-          <button disabled={isWaiting} onClick={getRandomQuote} className="btn">
-            Random quote
-          </button>
-        </section>
+        {quote.length === 0 ? (
+          <div className="message">
+            <h1>This character does not have any quotes!</h1>
+          </div>
+        ) : (
+          <section className="box">
+            {quote.map((q) => (
+              <QuoteBox
+                key={q.quote_id}
+                isWaiting={isWaiting}
+                quote={q.quote}
+                randomQuoteHandler={getRandomQuote}
+              />
+            ))}
+          </section>
+        )}
       </section>
     );
 }
