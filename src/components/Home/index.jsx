@@ -101,7 +101,7 @@ export default function Home() {
 
   const getCharacters = async () => {
     try {
-      const res = await service.get("characters");
+      const res = await service.getCharacters();
       dispatch({ type: "CHARACTERS", characters: res });
     } catch (err) {
       console.warn(err);
