@@ -16,16 +16,12 @@ function sortByOrder(a, b, prop, order) {
   }
 }
 
-function sortAndFilter(array, sorts, filterKey) {
+function sortAndFilter(array, sortKey, sortOrder, filterKey) {
   // TODO: expensive clone
   let out = array.slice();
 
-  // Apply sorts
-  Object.keys(sorts).forEach((key) => {
-    if (sorts[key] != null) {
-      out = out.sort((a, b) => sortByOrder(a, b, key, sorts[key]));
-    }
-  });
+  // Apply sort
+  out = out.sort((a, b) => sortByOrder(a, b, sortKey, sortOrder));
 
   // Filter by name or nickname
   if (filterKey) {
@@ -45,17 +41,11 @@ export default function Home() {
     isLoading: true,
     characters: [],
     originalCharacters: [],
-    // TODO: initialize from local storage
-    // Sort state = ASC | DESC | null = null
-    sorts: {
-      name: "",
-      nickname: "",
-      birthday: "",
-    },
+    sortKey: null,
+    sortOrder: "DESC",
     filterByNameKey: "",
   };
   const reducer = (state, action) => {
-    console.log(action);
     switch (action.type) {
       case "TOGGLE_LOADING": {
         return { ...state, isLoading: action.isLoading };
@@ -73,27 +63,34 @@ export default function Home() {
           filterByNameKey: action.value,
           characters: sortAndFilter(
             state.originalCharacters,
-            state.sorts,
+            state.sortOrder,
+            state.sortKey,
             action.value
           ),
         };
       }
-      case "SORT": {
-        const newSorts = {
-          ...state.sorts,
-          // Cancel a sort order on sending the same order twice in a row
-          [action.by]:
-            state.sorts[action.by] === action.order
-              ? null
-              : action.order || null,
-        };
+      case "SORT_KEY": {
         return {
           ...state,
-          sorts: newSorts,
+          sortKey: action.value,
           characters: sortAndFilter(
             state.originalCharacters,
-            newSorts,
-            state.filters
+            action.value,
+            state.sortOrder,
+            state.filterByNameKey
+          ),
+        };
+      }
+      case "SORT_ORDER": {
+        const sortOrder = action.value;
+        return {
+          ...state,
+          sortOrder,
+          characters: sortAndFilter(
+            state.originalCharacters,
+            state.sortKey,
+            sortOrder,
+            state.filterByNameKey
           ),
         };
       }
@@ -103,18 +100,19 @@ export default function Home() {
   };
   const [state, dispatch] = useReducer(reducer, initialState);
 
+  const getCharacters = async () => {
+    try {
+      const res = await service.get("characters");
+      dispatch({ type: "CHARACTERS", characters: res });
+    } catch (err) {
+      console.warn(err);
+    } finally {
+      dispatch({ type: "TOGGLE_LOADING", isLoading: false });
+    }
+  };
+
   useEffect(() => {
-    service
-      .get("characters")
-      .then((res) => {
-        dispatch({ type: "CHARACTERS", characters: res });
-      })
-      .catch((err) => {
-        console.warn(err);
-      })
-      .finally(() => {
-        dispatch({ type: "TOGGLE_LOADING", isLoading: false });
-      });
+    getCharacters();
   }, []);
 
   console.log(state);
@@ -124,7 +122,7 @@ export default function Home() {
     return (
       <>
         <div className="form-card">
-          <div className="input-wrapper col-3">
+          <div className="input-wrapper col-xs-12 col-sm-6 col-3">
             <label htmlFor="filter">Filter:</label>
             <input
               className="field"
@@ -141,13 +139,15 @@ export default function Home() {
               }
             />
           </div>
-          <div className="input-wrapper col-3">
+          <div className="input-wrapper col-xs-12 col-sm-6 col-3">
             <label htmlFor="sort">Sort by</label>
             <select
               id="sort"
               className="field"
               defaultValue={0}
-              onChange={(order) => dispatch({ type: "SORT", by: order, order })}
+              onChange={(e) =>
+                dispatch({ type: "SORT_KEY", value: e.target.value })
+              }
             >
               <option value="0" disabled>
                 choose...
@@ -158,18 +158,26 @@ export default function Home() {
             </select>
           </div>
           <div className="col-3">
-            <button className="sort-btn col-12">desc/asc</button>
+            <select
+              defaultValue="DESC"
+              onChange={(e) => {
+                dispatch({ type: "SORT_ORDER", value: e.target.value });
+              }}
+            >
+              <option value="DESC">DESC</option>
+              <option value="ASC">ASC</option>
+            </select>
           </div>
         </div>
         <div className="container">
           {state.characters.map((character) => (
             <article
-              className="card col-3"
+              className="card col-xs-12 col-sm-6 col-3"
               key={character.char_id}
               onClick={() => navigate(`/quotes/${character.name}`)}
             >
               <section className="card-content col-12">
-                <section className="col-6">
+                <section className="col-xs-12 col-6">
                   <img
                     src={character.img}
                     className="avatar"
@@ -177,7 +185,7 @@ export default function Home() {
                     loading="lazy"
                   />
                 </section>
-                <section className="col-6 info">
+                <section className="col-xs-12 col-6 info">
                   <section>
                     <p>name: {character.name}</p>
                   </section>
