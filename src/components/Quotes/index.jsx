@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useCallback, useEffect, useState } from "react";
+import { useParams, Link } from "react-router-dom";
 import service from "../../services/service";
 import "./style.css";
 import QuoteBox from "../QuoteBox";
@@ -10,10 +10,10 @@ export default function Quotes() {
   const [quote, setQuote] = useState([]);
   const [isWaiting, setIsWaiting] = useState(false);
 
-  const getRandomQuote = async () => {
+  const getRandomQuote = useCallback(async () => {
     try {
       setIsWaiting(true);
-      const res = await service.get(`quote/random?autho%20r=${name}`);
+      const res = await service.getQoutes(name);
       setQuote(res);
     } catch (error) {
       console.warn(error);
@@ -21,32 +21,35 @@ export default function Quotes() {
       setIsLoading(false);
       setIsWaiting(false);
     }
-  };
+  }, [name]);
 
   useEffect(() => {
     getRandomQuote();
-  }, []);
+  }, [getRandomQuote]);
 
   if (isLoading) return <p className="center">loading...</p>;
   else
     return (
-      <section className="center">
-        {quote.length === 0 ? (
-          <div className="message">
-            <h1>This character does not have any quotes!</h1>
-          </div>
-        ) : (
-          <section className="box">
-            {quote.map((q) => (
-              <QuoteBox
-                key={q.quote_id}
-                isWaiting={isWaiting}
-                quote={q.quote}
-                randomQuoteHandler={getRandomQuote}
-              />
-            ))}
-          </section>
-        )}
-      </section>
+      <>
+        <Link to="/">Back to home</Link>
+        <section className="center">
+          {quote.length === 0 ? (
+            <div className="message">
+              <h1>This character does not have any quotes!</h1>
+            </div>
+          ) : (
+            <section className="box">
+              {quote.map((q) => (
+                <QuoteBox
+                  key={q.quote_id}
+                  isWaiting={isWaiting}
+                  quote={q.quote}
+                  randomQuoteHandler={getRandomQuote}
+                />
+              ))}
+            </section>
+          )}
+        </section>
+      </>
     );
 }

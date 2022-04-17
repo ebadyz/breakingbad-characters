@@ -1,4 +1,4 @@
-import { useState, useEffect, useReducer } from "react";
+import { useEffect, useReducer } from "react";
 import { useNavigate } from "react-router-dom";
 import service from "../../services/service";
 import "./style.css";
@@ -17,7 +17,6 @@ function sortByOrder(a, b, prop, order) {
 }
 
 function sortAndFilter(array, sortKey, sortOrder, filterKey) {
-  // TODO: expensive clone
   let out = array.slice();
 
   // Apply sort
@@ -114,8 +113,6 @@ export default function Home() {
   useEffect(() => {
     getCharacters();
   }, []);
-
-  console.log(state);
 
   if (state.isLoading) return <p className="center">loading...</p>;
   else
