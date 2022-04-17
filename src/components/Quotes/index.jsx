@@ -31,7 +31,9 @@ export default function Quotes() {
   else
     return (
       <>
-        <Link to="/">Back to home</Link>
+        <Link to="/" className="btn back-btn">
+          Back to home
+        </Link>
         <section className="center">
           {quote?.length === 0 ? (
             <div className="message">
