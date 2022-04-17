@@ -16,6 +16,20 @@ function sortByOrder(a, b, prop, order) {
   }
 }
 
+function toggleSortOrder(currentOrder) {
+  switch (currentOrder) {
+    case "ASC": {
+      return "DESC";
+    }
+    case "DESC": {
+      return "ASC";
+    }
+    default: {
+      return null;
+    }
+  }
+}
+
 function sortAndFilter(array, sortKey, sortOrder, filterKey) {
   let out = array.slice();
 
@@ -80,8 +94,8 @@ export default function Home() {
           ),
         };
       }
-      case "SORT_ORDER": {
-        const sortOrder = action.value;
+      case "TOGGLE_SORT_ORDER": {
+        const sortOrder = toggleSortOrder(state.sortOrder);
         return {
           ...state,
           sortOrder,
@@ -155,15 +169,14 @@ export default function Home() {
             </select>
           </div>
           <div className="col-3">
-            <select
-              defaultValue="DESC"
-              onChange={(e) => {
-                dispatch({ type: "SORT_ORDER", value: e.target.value });
+            <button
+              className="sort-btn col-12"
+              onClick={() => {
+                dispatch({ type: "TOGGLE_SORT_ORDER" });
               }}
             >
-              <option value="DESC">DESC</option>
-              <option value="ASC">ASC</option>
-            </select>
+              {state.sortOrder}
+            </button>
           </div>
         </div>
         <div className="container">

@@ -7,7 +7,7 @@ import QuoteBox from "../QuoteBox";
 export default function Quotes() {
   const { name } = useParams();
   const [isLoading, setIsLoading] = useState(true);
-  const [quote, setQuote] = useState([]);
+  const [quote, setQuote] = useState(null);
   const [isWaiting, setIsWaiting] = useState(false);
 
   const getRandomQuote = useCallback(async () => {
@@ -33,13 +33,13 @@ export default function Quotes() {
       <>
         <Link to="/">Back to home</Link>
         <section className="center">
-          {quote.length === 0 ? (
+          {quote?.length === 0 ? (
             <div className="message">
               <h1>This character does not have any quotes!</h1>
             </div>
           ) : (
             <section className="box">
-              {quote.map((q) => (
+              {quote?.map((q) => (
                 <QuoteBox
                   key={q.quote_id}
                   isWaiting={isWaiting}
