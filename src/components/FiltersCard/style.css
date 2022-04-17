@@ -1,0 +1,33 @@
+.form-card {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  flex-flow: row wrap;
+  padding: 0 2rem;
+  gap: 20px;
+}
+
+.input-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+.input-wrapper > label {
+  padding-bottom: 0.5rem;
+}
+
+.field {
+  color: var(--dark);
+  border: 1px solid var(--dark);
+  padding: 0.8rem;
+  border-radius: 0.3rem;
+}
+
+.sort-btn {
+  background-color: var(--dark);
+  color: var(--light);
+  border: 1px solid var(--dark);
+  outline: none;
+  padding: 0.8rem;
+  border-radius: 0.3rem;
+  cursor: pointer;
+}
