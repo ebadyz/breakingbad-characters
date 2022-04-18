@@ -46,7 +46,7 @@ export default function Quotes() {
                   key={q.quote_id}
                   isWaiting={isWaiting}
                   quote={q.quote}
-                  randomQuoteHandler={getRandomQuote}
+                  getRandomQuote={getRandomQuote}
                 />
               ))}
             </section>
