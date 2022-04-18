@@ -34,7 +34,7 @@ export default function Quotes() {
         <Link to="/" className="btn back-btn">
           Back to home
         </Link>
-        <section className="center">
+        <section className="quote-center">
           {quote?.length === 0 ? (
             <div className="message">
               <h1>This character does not have any quotes!</h1>
