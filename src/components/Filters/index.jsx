@@ -3,7 +3,7 @@ import "./style.css";
 export function Filters({
   filterKey,
   onFilterChange,
-  onSortSelect,
+  onSortKeySelect,
   onSortOrderToggle,
   sortOrder,
   sortKey,
@@ -19,7 +19,9 @@ export function Filters({
           name="name"
           placeholder="Name or Nickname"
           defaultValue={filterKey}
-          onChange={onFilterChange}
+          onChange={(e) => {
+            onFilterChange(e.target.value);
+          }}
         />
       </div>
       <div className="input-wrapper col-xs-12 col-3">
@@ -28,7 +30,9 @@ export function Filters({
           id="sort"
           className="field"
           defaultValue={0}
-          onChange={onSortSelect}
+          onChange={(e) => {
+            onSortKeySelect(e.target.value);
+          }}
         >
           <option value="">choose...</option>
           <option value="name">name</option>

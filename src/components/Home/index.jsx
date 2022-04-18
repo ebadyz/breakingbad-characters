@@ -1,6 +1,7 @@
 import { useEffect, useReducer } from "react";
 import { useNavigate } from "react-router-dom";
 import service from "../../services/service";
+import { toggleSortOrder } from "../../utils";
 import { CharacterStatus } from "../CharacterStatus";
 import { Filters } from "../Filters";
 import "./style.css";
@@ -15,20 +16,6 @@ function sortByOrder(a, b, prop, order) {
     }
     default:
       return 0;
-  }
-}
-
-function toggleSortOrder(currentOrder) {
-  switch (currentOrder) {
-    case "ASC": {
-      return "DESC";
-    }
-    case "DESC": {
-      return "ASC";
-    }
-    default: {
-      return null;
-    }
   }
 }
 
@@ -50,8 +37,53 @@ function sortAndFilter(array, sortKey, sortOrder, filterKey) {
   return out;
 }
 
-export default function Home() {
+export function HomeComponent({ characters, ...filterProps }) {
   const navigate = useNavigate();
+  return (
+    <>
+      <Filters {...filterProps} />
+      <main className="container" role="list">
+        {characters.map((character) => (
+          <article
+            role="listitem"
+            className="card"
+            key={character.char_id}
+            onClick={() => navigate(`/quotes/${character.name}`)}
+          >
+            <section className="card-content col-12">
+              <section className="col-xs-12 col-6">
+                <img
+                  src={character.img}
+                  className="avatar"
+                  alt={character.name}
+                  loading="lazy"
+                />
+              </section>
+              <section className="col-xs-12 col-6 info">
+                <section>
+                  <p>Name: {character.name}</p>
+                </section>
+                <section>
+                  <p>Nickname: {character.nickname}</p>
+                </section>
+                <section>
+                  <p>Birthday: {character.birthday}</p>
+                </section>
+                <section>
+                  <p>
+                    Status: <CharacterStatus status={character.status} />
+                  </p>
+                </section>
+              </section>
+            </section>
+          </article>
+        ))}
+      </main>
+    </>
+  );
+}
+
+export default function Home() {
   const initialState = {
     isLoading: true,
     characters: [],
@@ -133,60 +165,21 @@ export default function Home() {
   if (state.isLoading) return <p className="center">loading...</p>;
   else
     return (
-      <>
-        <Filters
-          filterKey={state.filterByNameKey}
-          onFilterChange={(e) =>
-            dispatch({
-              type: "FILTER_BY_NAME_NICKNAME",
-              value: e.target.value,
-            })
-          }
-          onSortSelect={(e) =>
-            dispatch({ type: "SORT_KEY", value: e.target.value })
-          }
-          onSortOrderToggle={() => {
-            dispatch({ type: "TOGGLE_SORT_ORDER" });
-          }}
-          sortOrder={state.sortOrder}
-          sortKey={state.sortKey}
-        />
-        <main className="container">
-          {state.characters.map((character) => (
-            <article
-              className="card"
-              key={character.char_id}
-              onClick={() => navigate(`/quotes/${character.name}`)}
-            >
-              <section className="card-content col-12">
-                <section className="col-xs-12 col-6">
-                  <img
-                    src={character.img}
-                    className="avatar"
-                    alt={character.name}
-                    loading="lazy"
-                  />
-                </section>
-                <section className="col-xs-12 col-6 info">
-                  <section>
-                    <p>Name: {character.name}</p>
-                  </section>
-                  <section>
-                    <p>Nickname: {character.nickname}</p>
-                  </section>
-                  <section>
-                    <p>Birthday: {character.birthday}</p>
-                  </section>
-                  <section>
-                    <p>
-                      Status: <CharacterStatus status={character.status} />
-                    </p>
-                  </section>
-                </section>
-              </section>
-            </article>
-          ))}
-        </main>
-      </>
+      <HomeComponent
+        characters={state.characters}
+        filterKey={state.filterByNameKey}
+        sortKey={state.sortKey}
+        sortOrder={state.sortOrder}
+        onFilterChange={(key) =>
+          dispatch({
+            type: "FILTER_BY_NAME_NICKNAME",
+            value: key,
+          })
+        }
+        onSortOrderToggle={() => {
+          dispatch({ type: "TOGGLE_SORT_ORDER" });
+        }}
+        onSortKeySelect={(key) => dispatch({ type: "SORT_KEY", value: key })}
+      />
     );
 }
