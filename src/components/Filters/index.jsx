@@ -6,6 +6,7 @@ export function Filters({
   onSortSelect,
   onSortOrderToggle,
   sortOrder,
+  sortKey,
 }) {
   return (
     <header className="form-card">
@@ -38,7 +39,11 @@ export function Filters({
         </select>
       </div>
       <div className="col-xs-12 col-3">
-        <button className="btn sort-btn col-12" onClick={onSortOrderToggle}>
+        <button
+          disabled={!sortKey}
+          className="btn sort-btn col-12"
+          onClick={onSortOrderToggle}
+        >
           {sortOrder}
         </button>
       </div>

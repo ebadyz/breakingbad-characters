@@ -1,6 +1,7 @@
 import { useEffect, useReducer } from "react";
 import { useNavigate } from "react-router-dom";
 import service from "../../services/service";
+import { CharacterStatus } from "../CharacterStatus";
 import { Filters } from "../Filters";
 import "./style.css";
 
@@ -148,6 +149,7 @@ export default function Home() {
             dispatch({ type: "TOGGLE_SORT_ORDER" });
           }}
           sortOrder={state.sortOrder}
+          sortKey={state.sortKey}
         />
         <main className="container">
           {state.characters.map((character) => (
@@ -176,7 +178,9 @@ export default function Home() {
                     <p>birthday: {character.birthday}</p>
                   </section>
                   <section>
-                    <p>status: {character.status}</p>
+                    <p>
+                      status: <CharacterStatus status={character.status} />
+                    </p>
                   </section>
                 </section>
               </section>
