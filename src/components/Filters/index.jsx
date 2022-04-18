@@ -30,9 +30,7 @@ export function Filters({
           defaultValue={0}
           onChange={onSortSelect}
         >
-          <option value="0" disabled>
-            choose...
-          </option>
+          <option value="">choose...</option>
           <option value="name">name</option>
           <option value="nickname">nickname</option>
           <option value="birthday">birthday</option>

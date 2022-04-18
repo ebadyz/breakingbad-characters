@@ -169,17 +169,17 @@ export default function Home() {
                 </section>
                 <section className="col-xs-12 col-6 info">
                   <section>
-                    <p>name: {character.name}</p>
+                    <p>Name: {character.name}</p>
                   </section>
                   <section>
-                    <p>nickname: {character.nickname}</p>
+                    <p>Nickname: {character.nickname}</p>
                   </section>
                   <section>
-                    <p>birthday: {character.birthday}</p>
+                    <p>Birthday: {character.birthday}</p>
                   </section>
                   <section>
                     <p>
-                      status: <CharacterStatus status={character.status} />
+                      Status: <CharacterStatus status={character.status} />
                     </p>
                   </section>
                 </section>

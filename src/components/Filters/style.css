@@ -32,3 +32,8 @@
   border-radius: 0.3rem;
   cursor: pointer;
 }
+
+.sort-btn:disabled {
+  background-color: var(--light);
+  cursor: not-allowed;
+}
