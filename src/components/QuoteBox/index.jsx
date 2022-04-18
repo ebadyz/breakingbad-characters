@@ -1,6 +1,6 @@
 import "./style.css";
 
-export default function QuoteBox({ isWaiting, quote, randomQuoteHandler }) {
+export default function QuoteBox({ isWaiting, quote, getRandomQuote }) {
   return (
     <section className="box-content">
       <h1>Quote:</h1>
@@ -11,7 +11,7 @@ export default function QuoteBox({ isWaiting, quote, randomQuoteHandler }) {
       )}
       <button
         disabled={isWaiting}
-        onClick={randomQuoteHandler}
+        onClick={getRandomQuote}
         className="btn quote-btn"
       >
         Random quote

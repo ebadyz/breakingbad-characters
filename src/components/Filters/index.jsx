@@ -1,6 +1,12 @@
 import "./style.css";
 
-export default function FiltersCard({ state, dispatch }) {
+export function Filters({
+  filterKey,
+  onFilterChange,
+  onSortSelect,
+  onSortOrderToggle,
+  sortOrder,
+}) {
   return (
     <header className="form-card">
       <div className="input-wrapper col-xs-12 col-3">
@@ -11,13 +17,8 @@ export default function FiltersCard({ state, dispatch }) {
           id="filter"
           name="name"
           placeholder="Name or Nickname"
-          defaultValue={state.filterByNameKey}
-          onChange={(e) =>
-            dispatch({
-              type: "FILTER_BY_NAME_NICKNAME",
-              value: e.target.value,
-            })
-          }
+          defaultValue={filterKey}
+          onChange={onFilterChange}
         />
       </div>
       <div className="input-wrapper col-xs-12 col-3">
@@ -26,9 +27,7 @@ export default function FiltersCard({ state, dispatch }) {
           id="sort"
           className="field"
           defaultValue={0}
-          onChange={(e) =>
-            dispatch({ type: "SORT_KEY", value: e.target.value })
-          }
+          onChange={onSortSelect}
         >
           <option value="0" disabled>
             choose...
@@ -39,13 +38,8 @@ export default function FiltersCard({ state, dispatch }) {
         </select>
       </div>
       <div className="col-xs-12 col-3">
-        <button
-          className="btn sort-btn col-12"
-          onClick={() => {
-            dispatch({ type: "TOGGLE_SORT_ORDER" });
-          }}
-        >
-          {state.sortOrder}
+        <button className="btn sort-btn col-12" onClick={onSortOrderToggle}>
+          {sortOrder}
         </button>
       </div>
     </header>

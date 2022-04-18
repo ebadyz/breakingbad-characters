@@ -1,7 +1,7 @@
 import { useEffect, useReducer } from "react";
 import { useNavigate } from "react-router-dom";
 import service from "../../services/service";
-import FiltersCard from "../FiltersCard";
+import { Filters } from "../Filters";
 import "./style.css";
 
 function sortByOrder(a, b, prop, order) {
@@ -133,7 +133,22 @@ export default function Home() {
   else
     return (
       <>
-        <FiltersCard state={state} dispatch={dispatch} />
+        <Filters
+          filterKey={state.filterByNameKey}
+          onFilterChange={(e) =>
+            dispatch({
+              type: "FILTER_BY_NAME_NICKNAME",
+              value: e.target.value,
+            })
+          }
+          onSortSelect={(e) =>
+            dispatch({ type: "SORT_KEY", value: e.target.value })
+          }
+          onSortOrderToggle={() => {
+            dispatch({ type: "TOGGLE_SORT_ORDER" });
+          }}
+          sortOrder={state.sortOrder}
+        />
         <main className="container">
           {state.characters.map((character) => (
             <article
