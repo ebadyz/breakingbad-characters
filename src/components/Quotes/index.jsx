@@ -30,7 +30,7 @@ export default function Quotes() {
   if (isLoading) return <p className="center">loading...</p>;
   else
     return (
-      <>
+      <div className="quote-container">
         <Link to="/" className="btn back-btn">
           Back to home
         </Link>
@@ -52,6 +52,6 @@ export default function Quotes() {
             </section>
           )}
         </section>
-      </>
+      </div>
     );
 }
