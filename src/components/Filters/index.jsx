@@ -14,7 +14,7 @@ export function Filters({
         <label htmlFor="filter">Filter</label>
         <input
           className="field"
-          type="text"
+          type="search"
           id="filter"
           name="name"
           placeholder="Name or Nickname"
