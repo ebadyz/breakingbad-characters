@@ -154,7 +154,7 @@ export default function Home() {
         <main className="container">
           {state.characters.map((character) => (
             <article
-              className="card col-xs-12 col-sm-6 col-3"
+              className="card"
               key={character.char_id}
               onClick={() => navigate(`/quotes/${character.name}`)}
             >
